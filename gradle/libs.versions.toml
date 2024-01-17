@@ -1,0 +1,24 @@
+[versions]
+springBoot = "3.1.2"
+camel = "4.3.0"
+lombok = "1.18.28"
+mapstruct = "1.5.5.Final"
+hutool = "5.8.0.M3"
+activeMq = "6.0.1"
+springJms = "6.1.3"
+springDependencyManagement = "1.1.4"
+[plugins]
+#springDependencyManagement = { id = 'io.spring.dependency-management', version.ref = "springDependencyManagement" }
+
+[libraries]
+springBootCamelBom = {group = "org.apache.camel.springboot", name = "camel-spring-boot-bom", version.ref = "camel" }
+springBootBom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "springBoot" }
+lombok = {group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+mapstruct = {group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
+hutool = {group = "cn.hutool", name = "hutool-all", version.ref = "hutool" }
+activemqBroker = {group = "org.apache.activemq", name = "activemq-broker", version.ref = "activeMq" }
+activemqPool = {group = "org.apache.activemq", name = "activemq-pool", version.ref = "activeMq" }
+activemqSpring = {group = "org.apache.activemq", name = "activemq-spring", version.ref = "activeMq" }
+springJms = {group = "org.springframework", name = "spring-jms", version.ref = "springJms" }
+springBootAutoconfigure = {group = "org.springframework.boot", name = "spring-boot-autoconfigure" }
+springBootConfigurationProcessor = {group = "org.springframework.boot", name = "spring-boot-configuration-processor" }

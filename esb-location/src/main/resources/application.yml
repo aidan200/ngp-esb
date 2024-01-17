@@ -1,0 +1,43 @@
+siy:
+  common:
+    ESBLocation-msg-q: ESBLocationMsgQ
+    ESBVehicle-update-msg-q: ESBVehicleUpdateMsgQ
+    ESBVehicle-log-msg-q: ESBVehicleLogMsgQ
+    esb-location-service-combined-consumers: 2
+    esb-location-service-update-consumers: 2
+    esb-location-service-logging-consumers: 2
+    esb-location-service-consumers: 20
+    esb-location-service-batch-size: 100
+    esb-location-service-batch-interval: 5000
+    esb-location-to-hana: 1
+    esb-hana-authorization: Basic REFTSVQ6SGFuYTEyMzQh
+    esb-hana-insert-rest-api: http://10.2.140.142:8031/cn3da/xsjs/vehiclelocationupdate.xsjs?method=INSERT
+
+  mq:
+    active:
+      url: tcp://localhost:61616
+      enabled: true
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/DEVOPSUATCDB
+    username: system
+    password: oracle
+#    url: jdbc:oracle:thin:@10.2.40.61:8523/cn2dev.aix61.db.cdgtaxi.com.sg
+#    username: cn3_loc_svc
+#    password: cn3_loc_svc3
+    driver-class-name: oracle.jdbc.OracleDriver
+    dbcp2:
+      initial-size: 10
+      max-total: 50
+      max-idle: 10
+      max-wait-millis: 50
+      #The value of the configuration item was not found in the original project
+      #test-while-idle:
+      #time-between-eviction-runs-millis:
+      #validation-query:
+      #validation-query-timeout:
+#camel:
+#  springboot:
+#    routes-include-pattern: classpath:com/cdg/ngp/esb/location/*.xml
+server:
+  port: 7777

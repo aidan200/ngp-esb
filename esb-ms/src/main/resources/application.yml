@@ -1,0 +1,40 @@
+siy:
+  mq:
+    active:
+      all-broker-uri: tcp://localhost:61616
+      local-broker-uri: tcp://localhost:61616
+      fuse-username: admin
+      fuse-password: admin
+      ms-broker-uri: tcp://10.2.140.135:61620
+      ms-username: admin
+      ms-password: admin
+      jms-max-connections: 5
+  common:
+    local-old-udp-port: 8004
+    local-udp-ip: 0.0.0.0
+    local-new-udp-port: 9004
+    udp-buffer-size: 4096
+    buffer-consumers: 5
+    offline-ivd-status: 11
+    ms-as-rest-api: http://10.2.140.157:8080/goodfellas/rest/authentication
+    fuse-heartbeat-string: Th
+    odrd-enabled: true
+    odrd-vehicle-enabled: true
+    location-message-queue: locationMsgQ
+    location-message-ttl: 60000
+    odrd-mdt-location-message-queue: ODRDMDTLocationMessageQ
+    odrd-mdt-location-message-ttl: 60000
+    esb-location-update-queue: ESBLocationMsgQ
+    esb-location-update-ttl: 60000
+    traffic-scan-ttl: 60000
+    combined-consumers: 10
+    traffic-scan-consumers: 10
+    traffic-scan-ip: 192.168.48.148
+    traffic-scan-port: 50002
+    jms-redelivery-delay: 5000
+    ms-tlv-com-queue: MSTlvCOMQueue
+    ms-queue-consumers: 10
+    ping-msg: 35
+    ping-q: PINGQ
+    ms-tlv-ivd-queue: MSTlvIVDQueue
+    ivd-response-consumers: 10
