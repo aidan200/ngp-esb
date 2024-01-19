@@ -13,6 +13,13 @@ import sg.com.cdgtaxi.comms.tlv.util.BytesUtil;
 public class BeanHelper {
 	public String checkTTL(Exchange exchange) throws Exception {
 		Object obj = exchange.getIn().getHeader("JMSExpiration");
+		//ByteBuf Copy Process
+		ByteBuf buf = exchange.getIn().getBody(ByteBuf.class);
+		if (buf != null) {
+			byte[] data = new byte[buf.readableBytes()];
+			buf.readBytes(data);
+			exchange.getIn().setBody(data);
+		}
 		if (obj==null)
 			return "true";
 		long ttl = (long) obj;

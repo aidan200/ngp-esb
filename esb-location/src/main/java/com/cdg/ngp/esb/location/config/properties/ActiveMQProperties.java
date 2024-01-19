@@ -24,6 +24,8 @@ public class ActiveMQProperties {
     private String password;
 
     private boolean enabled;
+
+    private long esbLocationServiceJmsTtl;
 //
 //    public String getUrl() {
 //        return url;

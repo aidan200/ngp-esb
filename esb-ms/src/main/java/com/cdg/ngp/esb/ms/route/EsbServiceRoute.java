@@ -1,6 +1,7 @@
 package com.cdg.ngp.esb.ms.route;
 
 import com.cdg.ngp.esb.ms.config.properties.CommonProperties;
+import io.netty.buffer.ByteBuf;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,11 @@ public class EsbServiceRoute extends RouteBuilder {
     public void configure() throws Exception {
         from("netty:udp://" + commonProperties.getLocalUdpIp() + ":" + commonProperties.getLocalNewUdpPort() + "?allowDefaultCodec=false&sync=false&receiveBufferSizePredictor=" + commonProperties.getUdpBufferSize())
                 .routeId("ivd-udp-new")
+                .process("byteBufProcess")//ByteBuf Copy Process
                 .to("seda:udpNewBuffer?queue=#batchingQueue");
+
+        from("timer://myTimer?period=2000").setBody().simple("myTimertest1")
+                .to("seda:ivdResponse");
 
         from("seda:udpNewBuffer?concurrentConsumers=" + commonProperties.getBufferConsumers())
                 .routeId("udp-new-buffer")
@@ -37,12 +42,13 @@ public class EsbServiceRoute extends RouteBuilder {
         from("seda:combined?concurrentConsumers=" + commonProperties.getCombinedConsumers())
                 .routeId("combinedRoute")
                 .multicast().parallelProcessing()
-                .to("seda:locationService")
+                .to("seda:locationService") //send locationService
                 .to("seda:trafficScan")
                 .to("seda:authenticationService")
                 .to("seda:storeAndForward")
                 .end();
 
+        //locationService seda
         from("seda:locationService?concurrentConsumers=" + commonProperties.getCombinedConsumers())
                 .routeId("locationServiceRoute")
                 .choice()
@@ -54,17 +60,21 @@ public class EsbServiceRoute extends RouteBuilder {
                         .to("direct:locationServiceDirect")
                 .endChoice();
 
+        //locationService Direct
         from("direct:locationServiceDirect")
                 .routeId("locationServiceDirectRoute")
                 .choice()
                     .when().simple("${bean:beanHelper?method=checkStarted(${exchange},'eapLocationUpdateSwitch')}")
+                    .log("IVDMessage send message to LocationMessageQueue")
                         .to("amqs:" + commonProperties.getLocationMessageQueue() + "?timeToLive=" + commonProperties.getLocationMessageTtl())
                     .choice()
                         .when().simple( commonProperties.getOdrdVehicleEnabled() + " == 'true' || " + commonProperties.getOdrdEnabled() + " == 'true'")
+                            .log("IVDMessage send message to OdrdMdtLocationMessageQueue")
                             .to("amqs:" + commonProperties.getOdrdMdtLocationMessageQueue() + "?timeToLive=" + commonProperties.getOdrdMdtLocationMessageTtl())
                     .endChoice()
                 .choice()
                     .when().simple("${bean:beanHelper?method=checkStarted(${exchange},'esbLocationUpdateSwitch')} && ${header.IVD_MESSAGE_TYPE} == 'REGULAR_REPORT'")
+                        .log("IVDMessage send message to EsbLocationUpdateQueue")
                         .to("amqs:" + commonProperties.getEsbLocationUpdateQueue() + "?timeToLive=" + commonProperties.getEsbLocationUpdateTtl())
                 .endChoice();
 
@@ -82,14 +92,16 @@ public class EsbServiceRoute extends RouteBuilder {
                 .to("netty:tcp://" + commonProperties.getTrafficScanIp() + ":" + commonProperties.getTrafficScanPort() + "?allowDefaultCodec=false&sync=false")
                 .log("Finish sending message to Traffic Scan for ${header.IVD_MESSAGE_STRING}")
                 .onException(ConnectException.class, Exception.class)
+                //.process("byteBufProcess")
                 .retryWhile(simple("${bean:beanHelper?method=checkTTL}"))
-                    // TODO infinite retries ？？？
+                    .log("retry Traffic Scan")
                     .maximumRedeliveries(-1).redeliveryDelay(commonProperties.getJmsRedeliveryDelay())
                 .handled(true)
                 .log(LoggingLevel.WARN, "Cannot send message to Traffic Scan for ${header.IVD_MESSAGE_STRING}");
 
         from("seda:authenticationService?concurrentConsumers=" + commonProperties.getCombinedConsumers())
                 .routeId("authenticationServiceRoute")
+                .log("authenticationService ivd message type ${header.IVD_MESSAGE_TYPE}")
                 .choice()
                     .when().simple("${header.IVD_MESSAGE_TYPE} in 'POWER_UP,LOGON_REQUEST,IVD_HARDWARE_INFO,LOGOUT_REQUEST' && ${header.IVD_MESSAGE.isNew} == true")
                         .log("Send message to Authentication for ${header.IVD_MESSAGE_STRING} ")
@@ -107,23 +119,23 @@ public class EsbServiceRoute extends RouteBuilder {
                 .to("seda:ivdResponse")
                 .endChoice();
 
-        from("amqrms:" + commonProperties.getMsTlvComQueue() + "?concurrentConsumers=" + commonProperties.getMsQueueConsumers())
-                .routeId("MicroServicesToMdtRoute-new")
-                .log("CN2ServerHandler got message from MSTlvCOMQueue")
-                .bean("cn2ServerHandler", "sendNewMsgToMdt")
-                .choice()
-                    .when().simple("${header.PING} in '" + commonProperties.getPingMsg() + "'")
-                        .log("start send ................")
-                        .to("amqsms:" + commonProperties.getPingQ())
-                        .log("sending PING feed back to vehicle-common service")
-                        .log("body1 : '${body}' ")
-                        .setBody().simple("${header.RESPONSE_BYTES}")
-                        .log("body1 : '${body}' ")
-                        .to("seda:ivdResponse")
-                    .otherwise()
-                        .to("seda:ivdResponse")
-                .endChoice();
-
+//        from("amqrms:" + commonProperties.getMsTlvComQueue() + "?concurrentConsumers=" + commonProperties.getMsQueueConsumers())
+//                .routeId("MicroServicesToMdtRoute-new")
+//                .log("CN2ServerHandler got message from MSTlvCOMQueue")
+//                .bean("cn2ServerHandler", "sendNewMsgToMdt")
+//                .choice()
+//                    .when().simple("${header.PING} in '" + commonProperties.getPingMsg() + "'")
+//                        .log("start send ................")
+//                        .to("amqsms:" + commonProperties.getPingQ())
+//                        .log("sending PING feed back to vehicle-common service")
+//                        .log("body1 : '${body}' ")
+//                        .setBody().simple("${header.RESPONSE_BYTES}")
+//                        .log("body1 : '${body}' ")
+//                        .to("seda:ivdResponse")
+//                    .otherwise()
+//                        .to("seda:ivdResponse")
+//                .endChoice();
+        // TODO Is it abandoned ？
         from("direct:tlvTap")
                 .routeId("simulatorRoute_new")
                 .bean("simulatorBean", "dispatchMessageFromTlvQ")

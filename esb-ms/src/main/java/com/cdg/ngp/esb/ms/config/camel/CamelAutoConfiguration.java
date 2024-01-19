@@ -1,5 +1,6 @@
 package com.cdg.ngp.esb.ms.config.camel;
 
+import com.cdg.ngp.esb.ms.component.process.ByteBufProcess;
 import com.cdg.ngp.esb.ms.component.tcp.TCPComponent;
 import com.cdg.ngp.esb.ms.component.tcp.codec.TCPLengthFieldCodec;
 import com.cdg.ngp.esb.ms.component.udp.UDPComponent;
@@ -42,6 +43,11 @@ public class CamelAutoConfiguration {
     @Bean
     public UDPComponent udps(){
         return new UDPComponent();
+    }
+
+    @Bean
+    public ByteBufProcess byteBufProcess(){
+        return new ByteBufProcess();
     }
 
     @Bean

@@ -57,9 +57,9 @@ subprojects {
         implementation(rootProject.libs.activemqSpring)
         implementation(rootProject.libs.springJms)
         implementation(rootProject.libs.lombok)
-        implementation(rootProject.libs.mapstruct)
+        //implementation(rootProject.libs.mapstruct)
         annotationProcessor(rootProject.libs.lombok)
-        annotationProcessor(rootProject.libs.mapstruct)
+        //annotationProcessor(rootProject.libs.mapstruct)
 
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.apache.camel:camel-test-spring-junit5:4.3.0")

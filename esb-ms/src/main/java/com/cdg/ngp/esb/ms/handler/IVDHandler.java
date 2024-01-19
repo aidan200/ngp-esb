@@ -209,16 +209,21 @@ public class IVDHandler {
 	 */
 	public DoProcessResult doProcess(Exchange exchange, boolean isNew) {
 		// TODO unknown risk
-		ByteBuf msg = (ByteBuf) exchange.getIn().getBody();
-		byte[] msgBytes = msg.array();
-		
+		ByteBuf byteBuf = exchange.getIn().getBody(ByteBuf.class);
+		if (byteBuf == null || !byteBuf.isReadable()) {
+			throw new RuntimeException("udp byteBuf is unreadable !");
+		}
+		byte[] msgBytes = new byte[byteBuf.readableBytes()];
+		byteBuf.readBytes(msgBytes);
+
 		if (Arrays.equals(fuseHeartbeatBytes, ArrayUtils.subarray(msgBytes, 0, fuseHeartbeatBytes.length))) {
 			exchange.getIn().setHeader("HEARTBEAT_NO", msgBytes[msgBytes.length-1]-'0');
+			//exchange.getIn().setBody(msgBytes);
 			fuseMonitorResponseProducer.send(exchange);
 			return null;
 		} else {
 			InetSocketAddress addr = (InetSocketAddress) exchange.getIn().getHeader(NettyConstants.NETTY_REMOTE_ADDRESS);
-			
+
 			if (!isNew && (msgBytes[0] & 0xFF) == STORE_FORWARD_MESSAGE.getId()) {
 				msgBytes = ArrayUtils.remove(msgBytes, 0);
 			}
@@ -241,23 +246,23 @@ public class IVDHandler {
 				SedaEndpoint sedaSF = (SedaEndpoint)ctx.getEndpoint("seda:storeAndForward");
 				log.debug(sedaUNB.getExchanges().size() + "," + sedaUOB.getExchanges().size() +
 						"," + sedaC.getExchanges().size() + "," + sedaAS.getExchanges().size() +
-						"," + sedaLS.getExchanges().size() + "," + sedaCS.getExchanges().size() + 
+						"," + sedaLS.getExchanges().size() + "," + sedaCS.getExchanges().size() +
 						"," + sedaOS.getExchanges().size() + "," + sedaSF.getExchanges().size() +
 						" - "+ exchange.getIn().getHeader("IVD_MESSAGE_STRING") +
-						". Message (header+body) bytes:" + BytesUtil.toString(msgBytes)); 
-				//Zilong changes here. Woon's requirement 
+						". Message (header+body) bytes:" + BytesUtil.toString(msgBytes));
+				//Zilong changes here. Woon's requirement
 			}
 			else {
 				int contentStartIndex = msgDetails.getContentStartIndex();
 				byte[] headerBytes = ArrayUtils.subarray(msgBytes, 0, contentStartIndex);
-				log.info(exchange.getIn().getHeader("IVD_MESSAGE_STRING") + 
+				log.info(exchange.getIn().getHeader("IVD_MESSAGE_STRING") +
 						". Message header bytes:" + BytesUtil.toString(headerBytes) +
 						". Content length:" + (msgBytes.length-contentStartIndex));
-				//Zilong changes here. Woon's requirement 			
+				//Zilong changes here. Woon's requirement
 			}
 
 			exchange.getIn().setBody(null);
-			
+
 			return new DoProcessResult(
 				msgDetails.getHeader().getType(),
 				!isNew && (((msgBytes[1] & 128) >> 7) > 0)

@@ -34,10 +34,10 @@ public class ActiveMqAutoConfiguration {
     }
 
     @Bean
-    public JmsComponent amqs(ConnectionFactory connectionFactory){
+    public JmsComponent amqs(ActiveMQProperties activeMqProperties, ConnectionFactory connectionFactory){
         JmsConfiguration configuration = new JmsConfiguration();
         configuration.setConnectionFactory(connectionFactory);
-        configuration.setTimeToLive(60000);
+        configuration.setTimeToLive(activeMqProperties.getEsbLocationServiceJmsTtl());
         configuration.setDeliveryPersistent(false);
         JmsComponent jmsComponent = new JmsComponent();
         jmsComponent.setConfiguration(configuration);

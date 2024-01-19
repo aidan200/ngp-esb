@@ -29,7 +29,8 @@ public class EsbLocationServiceRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        //from("timer://myTimer?period=2000").setBody().simple("myTimertest1")
+//        from("timer://myTimer?period=2000").setBody().simple("myTimertest1")
+//                        .to("seda:combined");
         from("amqr:queue:" + commonProperties.getESBLocationMsgQ() + "?concurrentConsumers=" + commonProperties.getEsbLocationServiceConsumers())
                 .routeId("esbLocationServiceRoute")
                 .bean("esbLocationServiceHandler", "process")
