@@ -31,8 +31,8 @@ public class EsbServiceRoute extends RouteBuilder {
                 .process("byteBufProcess")//ByteBuf Copy Process
                 .to("seda:udpNewBuffer?queue=#batchingQueue");
 
-        from("timer://myTimer?period=2000").setBody().simple("myTimertest1")
-                .to("seda:ivdResponse");
+//        from("timer://myTimer?period=2000").setBody().simple("myTimertest1")
+//                .to("seda:ivdResponse");
 
         from("seda:udpNewBuffer?concurrentConsumers=" + commonProperties.getBufferConsumers())
                 .routeId("udp-new-buffer")

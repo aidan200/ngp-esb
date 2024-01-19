@@ -2,23 +2,39 @@
 springBoot = "3.1.2"
 camel = "4.3.0"
 lombok = "1.18.28"
-mapstruct = "1.5.5.Final"
-hutool = "5.8.0.M3"
 activeMq = "6.0.1"
 springJms = "6.1.3"
+javaxJmsApi = "2.0.1"
+aspectjrt = "1.9.21"
+commonsLang3 = "3.4"
+gson = "2.8.9"
+httpclient = "4.5.13"
+ojdbc8 = "23.3.0.23.09"
+netty = "4.1.105.Final"
 springDependencyManagement = "1.1.4"
 [plugins]
 #springDependencyManagement = { id = 'io.spring.dependency-management', version.ref = "springDependencyManagement" }
 
 [libraries]
-springBootCamelBom = {group = "org.apache.camel.springboot", name = "camel-spring-boot-bom", version.ref = "camel" }
-springBootBom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "springBoot" }
-lombok = {group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
-mapstruct = {group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
-hutool = {group = "cn.hutool", name = "hutool-all", version.ref = "hutool" }
 activemqBroker = {group = "org.apache.activemq", name = "activemq-broker", version.ref = "activeMq" }
 activemqPool = {group = "org.apache.activemq", name = "activemq-pool", version.ref = "activeMq" }
 activemqSpring = {group = "org.apache.activemq", name = "activemq-spring", version.ref = "activeMq" }
+
+springBootCamelBom = {group = "org.apache.camel.springboot", name = "camel-spring-boot-bom", version.ref = "camel" }
+camelActivemq = {group = "org.apache.camel", name = "camel-activemq", version.ref = "camel" }
+camelJms = {group = "org.apache.camel", name = "camel-jms", version.ref = "camel" }
+camelNetty = {group = "org.apache.camel", name = "camel-netty", version.ref = "camel" }
 springJms = {group = "org.springframework", name = "spring-jms", version.ref = "springJms" }
+javaxJmsApi = {group = "javax.jms", name = "javax.jms-api", version.ref = "javaxJmsApi" }
+ojdbc8 = {group = "com.oracle.database.jdbc", name = "ojdbc8", version.ref = "ojdbc8" }
+netty = {group = "io.netty", name = "netty-all", version.ref = "netty" }
+
+aspectjrt = {group = "org.aspectj", name = "aspectjrt", version.ref = "aspectjrt" }
+commonsLang3 = {group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3" }
+gson = {group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+httpclient = {group = "org.apache.httpcomponents", name = "httpclient", version.ref = "httpclient" }
+
+springBootBom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "springBoot" }
+lombok = {group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 springBootAutoconfigure = {group = "org.springframework.boot", name = "spring-boot-autoconfigure" }
 springBootConfigurationProcessor = {group = "org.springframework.boot", name = "spring-boot-configuration-processor" }

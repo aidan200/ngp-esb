@@ -15,6 +15,10 @@ java {
     }
 }
 
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    enabled = false
+}
+
 allprojects{
     repositories {
         mavenLocal()
@@ -38,28 +42,30 @@ subprojects {
     apply(plugin = "idea")
     apply(plugin = "maven-publish")
     apply(plugin = "io.spring.dependency-management")
-    apply(plugin = "org.springframework.boot")
+    //apply(plugin = "org.springframework.boot")
 
     dependencies {
         // Check if the current sub project is a common project to avoid circular dependencies
         if (project.name != "esb-common") {
             implementation(project(":esb-common"))
         }
+        implementation(platform(rootProject.libs.springBootBom))
         implementation(platform(rootProject.libs.springBootCamelBom))
-        implementation("org.apache.camel.springboot:camel-spring-boot-starter")
-        //implementation("org.apache.camel:camel-core-xml:4.3.0")
-        implementation("org.apache.camel:camel-jms:4.3.0")
-        implementation("org.apache.camel:camel-activemq:4.3.0")
-        implementation("javax.jms:javax.jms-api:2.0.1")
-        implementation("org.aspectj:aspectjrt:1.9.21")
-        //implementation(rootProject.libs.activemqBroker)
-        //implementation(rootProject.libs.activemqPool)
+        implementation(rootProject.libs.camelJms)
+        implementation(rootProject.libs.camelActivemq)
+        implementation(rootProject.libs.javaxJmsApi)
+        implementation(rootProject.libs.aspectjrt)
         implementation(rootProject.libs.activemqSpring)
         implementation(rootProject.libs.springJms)
         implementation(rootProject.libs.lombok)
         //implementation(rootProject.libs.mapstruct)
         annotationProcessor(rootProject.libs.lombok)
         //annotationProcessor(rootProject.libs.mapstruct)
+        implementation(rootProject.libs.commonsLang3)
+        implementation(rootProject.libs.gson)
+        implementation(rootProject.libs.httpclient)
+
+        implementation("org.apache.camel.springboot:camel-spring-boot-starter")
 
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.apache.camel:camel-test-spring-junit5:4.3.0")

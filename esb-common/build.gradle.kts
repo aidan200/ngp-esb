@@ -5,9 +5,9 @@ plugins {
 group = "com.cdg.ngp.esb"
 version = "1.0-SNAPSHOT"
 
-tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
-    enabled = false
-}
+//tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+//    enabled = false
+//}
 
 
 dependencies {
