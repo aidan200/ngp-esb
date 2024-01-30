@@ -16,7 +16,7 @@ siy:
     udp-buffer-size: 4096
     buffer-consumers: 5
     offline-ivd-status: 11
-    ms-as-rest-api: http://10.2.140.157:8080/goodfellas/rest/authentication
+    ms-as-rest-api: http://10.2.140.138:8080/goodfellas/rest/authentication
     fuse-heartbeat-string: Th
     odrd-enabled: true
     odrd-vehicle-enabled: true

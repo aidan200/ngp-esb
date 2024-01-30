@@ -72,6 +72,10 @@ public class Message implements Serializable {
         this.messageContent = messageContent;
     }
 
+    public Message(){
+
+    }
+
     /**
      * @method Name : Message
      * @param messageHeader

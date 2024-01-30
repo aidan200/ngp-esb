@@ -36,10 +36,17 @@ public class EsbLocationServiceRoute extends RouteBuilder {
                 .bean("esbLocationServiceHandler", "process")
                 .to("seda:combined");
 
+//        from("amqr:siy.test")
+//                .threads(commonProperties.getEsbLocationServiceConsumers())
+//                .routeId("esbLocationServiceRoute")
+//                .log("xxxxx");
+//                .bean("esbLocationServiceHandler", "process")
+//                .to("seda:combined");
+
         from("seda:combined?concurrentConsumers=" + commonProperties.getEsbLocationServiceCombinedConsumers())
                 .routeId("combinedRoute")
                 .multicast().parallelProcessing()
-                .to("amqr:queue:" + commonProperties.getESBVehicleUpdateMsgQ(), "amqr:queue:" + commonProperties.getESBVehicleLogMsgQ())
+                .to("amqs:queue:" + commonProperties.getESBVehicleUpdateMsgQ(), "amqs:queue:" + commonProperties.getESBVehicleLogMsgQ())
                 .end();
         from("amqr:queue:" + commonProperties.getESBVehicleUpdateMsgQ() + "?concurrentConsumers=" + commonProperties.getEsbLocationServiceUpdateConsumers())
                 .routeId("esbVehicleUpdateRoute")

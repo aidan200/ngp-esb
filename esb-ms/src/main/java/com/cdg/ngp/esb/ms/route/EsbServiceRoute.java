@@ -72,11 +72,14 @@ public class EsbServiceRoute extends RouteBuilder {
                             .log("IVDMessage send message to OdrdMdtLocationMessageQueue")
                             .to("amqs:" + commonProperties.getOdrdMdtLocationMessageQueue() + "?timeToLive=" + commonProperties.getOdrdMdtLocationMessageTtl())
                     .endChoice()
+                .endChoice()
+                .end()
                 .choice()
                     .when().simple("${bean:beanHelper?method=checkStarted(${exchange},'esbLocationUpdateSwitch')} && ${header.IVD_MESSAGE_TYPE} == 'REGULAR_REPORT'")
                         .log("IVDMessage send message to EsbLocationUpdateQueue")
                         .to("amqs:" + commonProperties.getEsbLocationUpdateQueue() + "?timeToLive=" + commonProperties.getEsbLocationUpdateTtl())
-                .endChoice();
+                .endChoice()
+                .end();
 
         from("seda:trafficScan?concurrentConsumers=" + commonProperties.getCombinedConsumers())
                 .routeId("trafficScanRoute")
@@ -107,9 +110,14 @@ public class EsbServiceRoute extends RouteBuilder {
                         .log("Send message to Authentication for ${header.IVD_MESSAGE_STRING} ")
                         .bean("authenticationServiceRestHandler", "sendMessageToAuthServer")
                         .log("authenticationService got message from Authentication Server")
+                .endChoice()
+                .end()
+                .choice()
                     .when().simple("${header.AUTH_ACK_FLAG} in 'TRUE'")
-                        .to("seda:ivdResponse")
-                .endChoice();
+                            .to("seda:ivdResponse")
+                .endChoice()
+                .end();
+
 
         from("seda:storeAndForward?concurrentConsumers=" + commonProperties.getCombinedConsumers())
                 .routeId("storeAndForwardRoute")
@@ -119,22 +127,22 @@ public class EsbServiceRoute extends RouteBuilder {
                 .to("seda:ivdResponse")
                 .endChoice();
 
-//        from("amqrms:" + commonProperties.getMsTlvComQueue() + "?concurrentConsumers=" + commonProperties.getMsQueueConsumers())
-//                .routeId("MicroServicesToMdtRoute-new")
-//                .log("CN2ServerHandler got message from MSTlvCOMQueue")
-//                .bean("cn2ServerHandler", "sendNewMsgToMdt")
-//                .choice()
-//                    .when().simple("${header.PING} in '" + commonProperties.getPingMsg() + "'")
-//                        .log("start send ................")
-//                        .to("amqsms:" + commonProperties.getPingQ())
-//                        .log("sending PING feed back to vehicle-common service")
-//                        .log("body1 : '${body}' ")
-//                        .setBody().simple("${header.RESPONSE_BYTES}")
-//                        .log("body1 : '${body}' ")
-//                        .to("seda:ivdResponse")
-//                    .otherwise()
-//                        .to("seda:ivdResponse")
-//                .endChoice();
+        from("amqrms:" + commonProperties.getMsTlvComQueue() + "?concurrentConsumers=" + commonProperties.getMsQueueConsumers())
+                .routeId("MicroServicesToMdtRoute-new")
+                .log("CN2ServerHandler got message from MSTlvCOMQueue")
+                .bean("cn2ServerHandler", "sendNewMsgToMdt")
+                .choice()
+                    .when().simple("${header.PING} in '" + commonProperties.getPingMsg() + "'")
+                        .log("start send ................")
+                        .to("amqsms:" + commonProperties.getPingQ())
+                        .log("sending PING feed back to vehicle-common service")
+                        .log("body1 : '${body}' ")
+                        .setBody().simple("${header.RESPONSE_BYTES}")
+                        .log("body1 : '${body}' ")
+                        .to("seda:ivdResponse")
+                    .otherwise()
+                        .to("seda:ivdResponse")
+                .endChoice();
         // TODO Is it abandoned ？
         from("direct:tlvTap")
                 .routeId("simulatorRoute_new")

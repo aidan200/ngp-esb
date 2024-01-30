@@ -230,6 +230,7 @@ public class IVDHandler {
 
 			IVDMessageDetails msgDetails = new IVDMessageDetails(msgBytes, isNew, addr);
 			String ivdMsgType = msgDetails.getHeader().getType().toString();
+			log.info("====begin===ivdMsgType[{}]====", ivdMsgType);
 			exchange.getIn().setHeader("IVD_MESSAGE_TYPE", ivdMsgType);
 			exchange.getIn().setHeader("IVD_MESSAGE", msgDetails);
 			exchange.getIn().setHeader("IVD_MESSAGE_STRING", msgDetails.toString());

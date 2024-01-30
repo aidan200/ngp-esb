@@ -21,6 +21,13 @@ siy:
       username: admin
       password: admin
 spring:
+#  kafka:
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+#    consumer:
+#      key-deserializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-deserializer: org.apache.kafka.common.serialization.ByteArraySerializer
   datasource:
     url: jdbc:oracle:thin:@localhost:1521/DEVOPSUATCDB
     username: system

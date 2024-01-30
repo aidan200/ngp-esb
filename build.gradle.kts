@@ -65,6 +65,10 @@ subprojects {
         implementation(rootProject.libs.gson)
         implementation(rootProject.libs.httpclient)
 
+        implementation("org.apache.camel:camel-kafka:4.3.0")
+        implementation ("org.springframework.kafka:spring-kafka:3.1.1")
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
+
         implementation("org.apache.camel.springboot:camel-spring-boot-starter")
 
         testImplementation("org.springframework.boot:spring-boot-starter-test")
