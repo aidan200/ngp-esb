@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 
 @Data
-@ConfigurationProperties(prefix = "siy.common")
+@ConfigurationProperties(prefix = "esb.common")
 public class CommonProperties {
 
     private String localUdpIp;

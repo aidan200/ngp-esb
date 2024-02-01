@@ -8,6 +8,7 @@ import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.component.jms.JmsConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ public class ActiveMqAutoConfiguration {
     private ActiveMQProperties activeMQProperties;
 
     @Bean
+    @ConditionalOnProperty(prefix = "esb.mq.active", name = "enabled", havingValue = "true")
     public ConnectionFactory pooledAllCF(){
         AMQConnectionFactorySupport factorySupport = new AMQConnectionFactorySupport();
         factorySupport.setAllBrokerURI(activeMQProperties.getAllBrokerUri());
@@ -52,6 +54,7 @@ public class ActiveMqAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "esb.mq.active", name = "enabled", havingValue = "true")
     public ConnectionFactory localCF() {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(activeMQProperties.getLocalBrokerUri());
         factory.setUserName(activeMQProperties.getFuseUsername());
@@ -60,6 +63,7 @@ public class ActiveMqAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "esb.mq.active", name = "enabled", havingValue = "true")
     public JmsComponent amqs(){
         JmsConfiguration configuration = new JmsConfiguration();
         configuration.setConnectionFactory(pooledAllCF());
@@ -70,6 +74,7 @@ public class ActiveMqAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "esb.mq.active", name = "enabled", havingValue = "true")
     public JmsComponent amqr(){
         JmsConfiguration configuration = new JmsConfiguration();
         configuration.setConnectionFactory(localCF());

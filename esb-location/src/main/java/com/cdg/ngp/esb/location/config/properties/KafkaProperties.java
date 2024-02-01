@@ -12,8 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 
 @Data
-@ConfigurationProperties(prefix = "esb.mq.active")
-public class ActiveMQProperties {
+@ConfigurationProperties(prefix = "esb.mq.kafka")
+public class KafkaProperties {
     /**
      * Message queue server path
      */
@@ -26,5 +26,5 @@ public class ActiveMQProperties {
     private boolean enabled;
 
     private long esbLocationServiceJmsTtl;
-
+    
 }

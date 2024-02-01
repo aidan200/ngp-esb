@@ -1,4 +1,4 @@
-siy:
+esb:
   mq:
     active:
       all-broker-uri: tcp://localhost:61616
@@ -9,6 +9,17 @@ siy:
       ms-username: admin
       ms-password: admin
       jms-max-connections: 5
+      enabled: false
+    kafka:
+      all-broker-uri: localhost:9092
+      local-broker-uri: localhost:9092
+      fuse-username: admin
+      fuse-password: admin
+      ms-broker-uri: tcp://10.2.140.135:61620
+      ms-username: admin
+      ms-password: admin
+      jms-max-connections: 5
+      enabled: true
   common:
     local-old-udp-port: 8004
     local-udp-ip: 0.0.0.0

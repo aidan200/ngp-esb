@@ -12,8 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 
 @Data
-@ConfigurationProperties(prefix = "esb.mq.active")
-public class ActiveMQProperties {
+@ConfigurationProperties(prefix = "esb.mq.kafka")
+public class KafkaProperties {
 
     private boolean enabled;
 

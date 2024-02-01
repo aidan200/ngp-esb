@@ -31,28 +31,47 @@ public class EsbLocationServiceRoute extends RouteBuilder {
 
 //        from("timer://myTimer?period=2000").setBody().simple("myTimertest1")
 //                        .to("seda:combined");
-        from("amqr:queue:" + commonProperties.getESBLocationMsgQ() + "?concurrentConsumers=" + commonProperties.getEsbLocationServiceConsumers())
-                .routeId("esbLocationServiceRoute")
-                .bean("esbLocationServiceHandler", "process")
-                .to("seda:combined");
-
-//        from("amqr:siy.test")
-//                .threads(commonProperties.getEsbLocationServiceConsumers())
+        //AMQ
+//        from("amqr:queue:" + commonProperties.getESBLocationMsgQ() + "?concurrentConsumers=" + commonProperties.getEsbLocationServiceConsumers())
 //                .routeId("esbLocationServiceRoute")
-//                .log("xxxxx");
 //                .bean("esbLocationServiceHandler", "process")
 //                .to("seda:combined");
-
+        //Kafka
+        from("amqr:" + commonProperties.getESBLocationMsgQ())
+                .threads(commonProperties.getEsbLocationServiceConsumers())
+                .routeId("esbLocationServiceRoute")
+                .log("xxxxx")
+                .bean("esbLocationServiceHandler", "process")
+                .to("seda:combined");
+        //AMQ
+//        from("seda:combined?concurrentConsumers=" + commonProperties.getEsbLocationServiceCombinedConsumers())
+//                .routeId("combinedRoute")
+//                .multicast().parallelProcessing()
+//                .to("amqs:queue:" + commonProperties.getESBVehicleUpdateMsgQ(), "amqs:queue:" + commonProperties.getESBVehicleLogMsgQ())
+//                .end();
+        //Kafka
         from("seda:combined?concurrentConsumers=" + commonProperties.getEsbLocationServiceCombinedConsumers())
                 .routeId("combinedRoute")
                 .multicast().parallelProcessing()
-                .to("amqs:queue:" + commonProperties.getESBVehicleUpdateMsgQ(), "amqs:queue:" + commonProperties.getESBVehicleLogMsgQ())
+                .to("amqs:" + commonProperties.getESBVehicleUpdateMsgQ(), "amqs:" + commonProperties.getESBVehicleLogMsgQ())
                 .end();
-        from("amqr:queue:" + commonProperties.getESBVehicleUpdateMsgQ() + "?concurrentConsumers=" + commonProperties.getEsbLocationServiceUpdateConsumers())
+
+        //AMQ
+//        from("amqr:queue:" + commonProperties.getESBVehicleUpdateMsgQ() + "?concurrentConsumers=" + commonProperties.getEsbLocationServiceUpdateConsumers())
+//                .routeId("esbVehicleUpdateRoute")
+//                .bean("esbVehicleUpdateHandler", "process");
+        //Kafka
+        from("amqr:" + commonProperties.getESBVehicleUpdateMsgQ())
+                .threads(commonProperties.getEsbLocationServiceUpdateConsumers())
                 .routeId("esbVehicleUpdateRoute")
                 .bean("esbVehicleUpdateHandler", "process");
-
-        from("amqr:queue:" + commonProperties.getESBVehicleLogMsgQ() + "?concurrentConsumers=" + commonProperties.getEsbLocationServiceLoggingConsumers())
+        //AMQ
+//        from("amqr:queue:" + commonProperties.getESBVehicleLogMsgQ() + "?concurrentConsumers=" + commonProperties.getEsbLocationServiceLoggingConsumers())
+//                .routeId("esbVehicleLogRoute")
+//                .bean("esbVehicleLogHandler","process");
+        //Kafka
+        from("amqr:" + commonProperties.getESBVehicleLogMsgQ())
+                .threads(commonProperties.getEsbLocationServiceLoggingConsumers())
                 .routeId("esbVehicleLogRoute")
                 .bean("esbVehicleLogHandler","process");
 

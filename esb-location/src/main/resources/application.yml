@@ -1,4 +1,4 @@
-siy:
+esb:
   common:
     ESBLocation-msg-q: ESBLocationMsgQ
     ESBVehicle-update-msg-q: ESBVehicleUpdateMsgQ
@@ -16,10 +16,13 @@ siy:
   mq:
     active:
       url: tcp://localhost:61616
-      enabled: true
+      enabled: false
       esb-location-service-jms-ttl: 60000
       username: admin
       password: admin
+    kafka:
+      url: localhost:9092
+      enabled: true
 spring:
 #  kafka:
 #    producer:

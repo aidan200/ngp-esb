@@ -22,16 +22,16 @@ tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
 allprojects{
     repositories {
         mavenLocal()
-//        maven {
-//            name = "fusesource.m2"
-//            url = uri("https://repo.fusesource.com/nexus/content/groups/public")
-//            isAllowInsecureProtocol = true
-//        }
-//        maven {
-//            name = "fusesource.ea"
-//            url = uri("https://repo.fusesource.com/nexus/content/groups/ea")
-//            isAllowInsecureProtocol = true
-//        }
+        maven {
+            name = "hw.m2"
+            url = uri("http://10.30.7.166:8081/repository/maven-public/")
+            isAllowInsecureProtocol = true
+        }
+        maven {
+            name = "cdg"
+            url = uri("http://10.2.140.85:8081/nexus/content/groups/public/")
+            isAllowInsecureProtocol = true
+        }
         mavenCentral()
     }
 }

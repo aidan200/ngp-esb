@@ -57,38 +57,66 @@ public class CamelAutoConfiguration {
         return template;
     }
 
+//    @Bean
+//    public ProducerTemplate locationMsgQProducerTemplate(CamelContext camelContext) {
+//        ProducerTemplate template = camelContext.createProducerTemplate();
+//        template.setDefaultEndpointUri("amqs:" + commonProperties.getLocationMessageQueue() + "?timeToLive=" + commonProperties.getLocationMessageTtl());
+//        return template;
+//    }
+//
+//    @Bean
+//    public ProducerTemplate ODRDlocationMsgQProducerTemplate(CamelContext camelContext) {
+//        ProducerTemplate template = camelContext.createProducerTemplate();
+//        template.setDefaultEndpointUri("amqs:" + commonProperties.getOdrdMdtLocationMessageQueue() + "?timeToLive=" + commonProperties.getOdrdMdtLocationMessageTtl());
+//        return template;
+//    }
+//
+//    @Bean
+//    public ProducerTemplate esbLocationMsgQProducerTemplate(CamelContext camelContext) {
+//        ProducerTemplate template = camelContext.createProducerTemplate();
+//        template.setDefaultEndpointUri("amqs:" + commonProperties.getEsbLocationUpdateQueue() + "?timeToLive=" + commonProperties.getEsbLocationUpdateTtl());
+//        return template;
+//    }
+//
+//    @Bean
+//    public ProducerTemplate trafficScanQueueProducerTemplate(CamelContext camelContext) {
+//        ProducerTemplate template = camelContext.createProducerTemplate();
+//        template.setDefaultEndpointUri("amqs:trafficScanQueue?timeToLive=" + commonProperties.getTrafficScanTtl());
+//        return template;
+//    }
+
+    @Bean
+    public ProducerTemplate fuseMonitorResponseProducerTemplate(CamelContext camelContext) {
+        ProducerTemplate template = camelContext.createProducerTemplate();
+        template.setDefaultEndpointUri("seda:fuseMonitorResponseQueue");
+        return template;
+    }
+
     @Bean
     public ProducerTemplate locationMsgQProducerTemplate(CamelContext camelContext) {
         ProducerTemplate template = camelContext.createProducerTemplate();
-        template.setDefaultEndpointUri("amqs:" + commonProperties.getLocationMessageQueue() + "?timeToLive=" + commonProperties.getLocationMessageTtl());
+        template.setDefaultEndpointUri("amqs:" + commonProperties.getLocationMessageQueue());
         return template;
     }
 
     @Bean
     public ProducerTemplate ODRDlocationMsgQProducerTemplate(CamelContext camelContext) {
         ProducerTemplate template = camelContext.createProducerTemplate();
-        template.setDefaultEndpointUri("amqs:" + commonProperties.getOdrdMdtLocationMessageQueue() + "?timeToLive=" + commonProperties.getOdrdMdtLocationMessageTtl());
+        template.setDefaultEndpointUri("amqs:" + commonProperties.getOdrdMdtLocationMessageQueue());
         return template;
     }
 
     @Bean
     public ProducerTemplate esbLocationMsgQProducerTemplate(CamelContext camelContext) {
         ProducerTemplate template = camelContext.createProducerTemplate();
-        template.setDefaultEndpointUri("amqs:" + commonProperties.getEsbLocationUpdateQueue() + "?timeToLive=" + commonProperties.getEsbLocationUpdateTtl());
+        template.setDefaultEndpointUri("amqs:" + commonProperties.getEsbLocationUpdateQueue());
         return template;
     }
 
     @Bean
     public ProducerTemplate trafficScanQueueProducerTemplate(CamelContext camelContext) {
         ProducerTemplate template = camelContext.createProducerTemplate();
-        template.setDefaultEndpointUri("amqs:trafficScanQueue?timeToLive=" + commonProperties.getTrafficScanTtl());
-        return template;
-    }
-
-    @Bean
-    public ProducerTemplate fuseMonitorResponseProducerTemplate(CamelContext camelContext) {
-        ProducerTemplate template = camelContext.createProducerTemplate();
-        template.setDefaultEndpointUri("seda:fuseMonitorResponseQueue");
+        template.setDefaultEndpointUri("amqs:trafficScanQueue");
         return template;
     }
 
